@@ -22,7 +22,9 @@ cask "seslen" do
   desc "Kulaklıkla çalışan ekipler için sessiz seslenme uygulaması"
   homepage "https://github.com/omerfruk/seslen"
 
-  depends_on macos: ">= :sonoma"
+  # Sembol biçimi en düşük sürümü belirtir; ">= :sonoma" karşılaştırma
+  # biçimi Homebrew tarafından kullanımdan kaldırıldı.
+  depends_on macos: :sonoma
 
   app "Seslen.app"
 
