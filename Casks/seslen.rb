@@ -4,7 +4,14 @@
 # konur. Kullanıcı şu komutlarla kurar:
 #
 #   brew tap omerfruk/seslen
-#   brew install --cask seslen
+#   brew install --cask --no-quarantine seslen
+#
+# NEDEN `--no-quarantine`: Uygulama Apple Developer sertifikasıyla
+# imzalanmadığı için macOS karantina bayrağını koyar ve açılışta "hasarlı"
+# uyarısı verir. Bunu cask içinden `postflight` ile temizlemek mümkün ama o
+# zaman cask "kod çalıştıran" sayılıp her kullanıcıdan `brew trust` onayı
+# ister. Homebrew'un kendi bayrağını kullanmak hem daha az sürtünmeli hem de
+# ne olduğu kullanıcıya açık.
 #
 # SÜRÜM ÇIKARIRKEN: `version` ve `sha256` alanları güncellenmelidir.
 # `make dmg` komutu DMG'nin SHA256 özetini ekrana yazar.
@@ -21,15 +28,6 @@ cask "seslen" do
 
   app "Seslen.app"
 
-  # Uygulama Apple Developer sertifikasıyla imzalanmadığı için macOS'un
-  # karantina bayrağını kaldırıyoruz. Aksi halde kullanıcı her açılışta
-  # "hasarlı" uyarısı alır.
-  postflight do
-    system_command "/usr/bin/xattr",
-                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Seslen.app"],
-                   sudo: false
-  end
-
   uninstall quit: "com.omerfruk.seslen"
 
   zap trash: [
@@ -40,10 +38,14 @@ cask "seslen" do
   caveats <<~METIN
     Seslen menü çubuğunda çalışır; Dock'ta simgesi görünmez.
 
-    İlk açılışta bir sunucu adresi girmeniz gerekir. Ekibinizin
-    yöneticisi size sunucu adresini ve 6 haneli katılım kodunu verecektir.
+    İlk açılışta bir sunucu adresi girmeniz gerekir. Ekibinizin yöneticisi
+    size sunucu adresini ve 6 haneli katılım kodunu verecektir.
 
-    Uygulama imzasız dağıtıldığı için macOS ilk açılışta uyarabilir:
-    Sistem Ayarları → Gizlilik ve Güvenlik → "Yine de Aç"
+    Uygulama Apple Developer sertifikasıyla imzalanmadığı için, kurarken
+    --no-quarantine kullanmadıysanız macOS "hasarlı" diyebilir. O durumda:
+
+      xattr -dr com.apple.quarantine /Applications/Seslen.app
+
+    ya da: Sistem Ayarları → Gizlilik ve Güvenlik → "Yine de Aç"
   METIN
 end

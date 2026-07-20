@@ -6,7 +6,7 @@ Kulaklıkla çalışan ekipler için sessiz seslenme uygulaması.
 
 ```bash
 brew tap omerfruk/seslen
-brew install --cask seslen
+brew install --cask --no-quarantine seslen
 ```
 
 ## Güncelleme
