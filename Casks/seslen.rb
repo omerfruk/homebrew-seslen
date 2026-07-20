@@ -1,21 +1,22 @@
 # Seslen Homebrew Cask'ı.
 #
 # Bu dosya `omerfruk/homebrew-seslen` deposundaki `Casks/seslen.rb` yoluna
-# konur. Kullanıcı şu komutlarla kurar:
+# konur. Kullanıcı tek komutla kurar:
 #
-#   brew tap omerfruk/seslen
-#   brew trust omerfruk/seslen
-#   brew install --cask seslen
+#   brew install --cask omerfruk/seslen/seslen
 #
-# NEDEN `brew trust`: Homebrew 6.0'dan itibaren `HOMEBREW_REQUIRE_TAP_TRUST`
-# varsayılan olarak açık ve resmi olmayan tüm tap'ler için bir kereye mahsus
-# güven onayı isteniyor. Cask'ın içeriğiyle ilgisi yok, atlanamıyor.
+# NEDEN TAM NİTELİKLİ AD: Homebrew 6.0'dan itibaren `HOMEBREW_REQUIRE_TAP_TRUST`
+# varsayılan olarak açık; resmi olmayan tap'lerdeki cask'lar yüklenmeden önce
+# `brew trust` ile onaylanmalı. Kaynağı `kullanici/tap/cask` biçiminde tam
+# yazmak bu onayın yerine geçer (`Trust.trust_fully_qualified_items!`) ve tap'i
+# de kendiliğinden ekler. Üstelik güveni tap'in tamamına değil yalnızca bu
+# cask'a verdiği için `brew trust omerfruk/seslen`'den dar kapsamlıdır.
 #
 # SÜRÜM ÇIKARIRKEN: `version` ve `sha256` alanları güncellenmelidir.
 # `make dmg` komutu DMG'nin SHA256 özetini ekrana yazar.
 cask "seslen" do
-  version "0.1.2"
-  sha256 "0530d52e0297f13f9c0be716fd0d3c9ba27795095396e46efece818e71fca741"
+  version "0.1.3"
+  sha256 "7a7002512ff65e26db83ed4ec5e1e815494a851ceda28f95a4950e3eb2610d4c"
 
   url "https://github.com/omerfruk/seslen/releases/download/v#{version}/Seslen-#{version}.dmg"
   name "Seslen"
@@ -29,9 +30,9 @@ cask "seslen" do
   app "Seslen.app"
 
   # Uygulama Apple Developer sertifikasıyla imzalanmadığı için macOS karantina
-  # bayrağı koyar ve açılışta "hasarlı" der. Kullanıcı tap'e zaten `brew trust`
-  # vermek zorunda olduğundan, bayrağı burada temizlemek ek bir sürtünme
-  # yaratmıyor; kullanıcının --no-quarantine yazmayı hatırlamasına gerek kalmıyor.
+  # bayrağı koyar ve açılışta "hasarlı" der. Kullanıcı kaynağı tam adıyla
+  # yazarak kurulumu zaten açıkça onayladığından, bayrağı burada temizlemek ek
+  # bir sürtünme yaratmıyor; --no-quarantine yazmayı hatırlaması gerekmiyor.
   postflight do
     system_command "/usr/bin/xattr",
                    args: ["-dr", "com.apple.quarantine", "#{appdir}/Seslen.app"],
