@@ -4,14 +4,12 @@
 # konur. Kullanıcı şu komutlarla kurar:
 #
 #   brew tap omerfruk/seslen
-#   brew install --cask --no-quarantine seslen
+#   brew trust omerfruk/seslen
+#   brew install --cask seslen
 #
-# NEDEN `--no-quarantine`: Uygulama Apple Developer sertifikasıyla
-# imzalanmadığı için macOS karantina bayrağını koyar ve açılışta "hasarlı"
-# uyarısı verir. Bunu cask içinden `postflight` ile temizlemek mümkün ama o
-# zaman cask "kod çalıştıran" sayılıp her kullanıcıdan `brew trust` onayı
-# ister. Homebrew'un kendi bayrağını kullanmak hem daha az sürtünmeli hem de
-# ne olduğu kullanıcıya açık.
+# NEDEN `brew trust`: Homebrew 6.0'dan itibaren `HOMEBREW_REQUIRE_TAP_TRUST`
+# varsayılan olarak açık ve resmi olmayan tüm tap'ler için bir kereye mahsus
+# güven onayı isteniyor. Cask'ın içeriğiyle ilgisi yok, atlanamıyor.
 #
 # SÜRÜM ÇIKARIRKEN: `version` ve `sha256` alanları güncellenmelidir.
 # `make dmg` komutu DMG'nin SHA256 özetini ekrana yazar.
@@ -28,6 +26,16 @@ cask "seslen" do
 
   app "Seslen.app"
 
+  # Uygulama Apple Developer sertifikasıyla imzalanmadığı için macOS karantina
+  # bayrağı koyar ve açılışta "hasarlı" der. Kullanıcı tap'e zaten `brew trust`
+  # vermek zorunda olduğundan, bayrağı burada temizlemek ek bir sürtünme
+  # yaratmıyor; kullanıcının --no-quarantine yazmayı hatırlamasına gerek kalmıyor.
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/Seslen.app"],
+                   sudo: false
+  end
+
   uninstall quit: "com.omerfruk.seslen"
 
   zap trash: [
@@ -41,11 +49,11 @@ cask "seslen" do
     İlk açılışta bir sunucu adresi girmeniz gerekir. Ekibinizin yöneticisi
     size sunucu adresini ve 6 haneli katılım kodunu verecektir.
 
-    Uygulama Apple Developer sertifikasıyla imzalanmadığı için, kurarken
-    --no-quarantine kullanmadıysanız macOS "hasarlı" diyebilir. O durumda:
+    Uygulama Apple Developer sertifikasıyla imzalanmadığı için macOS yine de
+    uyarabilir. O durumda:
 
-      xattr -dr com.apple.quarantine /Applications/Seslen.app
+      Sistem Ayarları → Gizlilik ve Güvenlik → "Yine de Aç"
 
-    ya da: Sistem Ayarları → Gizlilik ve Güvenlik → "Yine de Aç"
+    Uygulama içinde İzinler sekmesinde bu sayfayı açan bir kısayol var.
   METIN
 end

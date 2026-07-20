@@ -6,8 +6,13 @@ Kulaklıkla çalışan ekipler için sessiz seslenme uygulaması.
 
 ```bash
 brew tap omerfruk/seslen
-brew install --cask --no-quarantine seslen
+brew trust omerfruk/seslen
+brew install --cask seslen
 ```
+
+> `brew trust` adımı Homebrew 6.0 ile geldi: resmi olmayan tüm tap'ler için
+> bir kereye mahsus onay isteniyor. Atlarsanız kurulum "untrusted tap"
+> hatası verir.
 
 ## Güncelleme
 
