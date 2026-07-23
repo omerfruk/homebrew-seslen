@@ -15,8 +15,8 @@
 # SÜRÜM ÇIKARIRKEN: `version` ve `sha256` alanları güncellenmelidir.
 # `make dmg` komutu DMG'nin SHA256 özetini ekrana yazar.
 cask "seslen" do
-  version "0.1.6"
-  sha256 "c9ddd2c38a65654b2e6076c288b759cc0e4ae7758e30f6215c968964c6877a69"
+  version "0.1.7"
+  sha256 "84a30ebb906c177cf8e5494b9366a69c83fe4c19f1b193be4802f86a8e72104a"
 
   url "https://github.com/omerfruk/seslen/releases/download/v#{version}/Seslen-#{version}.dmg"
   name "Seslen"
